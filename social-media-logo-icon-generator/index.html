@@ -115,6 +115,8 @@
             margin-bottom: 1rem;
             background: #000;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         
         .adjustment-controls {
@@ -325,6 +327,7 @@
 
         function drawCrop(cropId, canvas) {
             const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             
             const state = cropState[cropId];
@@ -353,7 +356,36 @@
             }
 
             ctx.clearRect(0,0,targetWidth, targetHeight);
-            ctx.drawImage(sourceImage, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+            
+            // Performance: If downscaling significantly, use a multi-step approach for maximum sharpness
+            if (sWidth > targetWidth * 2) {
+                let tempCanvas = document.createElement('canvas');
+                let tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = sWidth;
+                tempCanvas.height = sHeight;
+                tempCtx.drawImage(sourceImage, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
+
+                let currW = sWidth;
+                let currH = sHeight;
+
+                while (currW > targetWidth * 2) {
+                    let nextW = Math.floor(currW / 2);
+                    let nextH = Math.floor(currH / 2);
+                    let nextCanvas = document.createElement('canvas');
+                    let nextCtx = nextCanvas.getContext('2d');
+                    nextCanvas.width = nextW;
+                    nextCanvas.height = nextH;
+                    nextCtx.imageSmoothingEnabled = true;
+                    nextCtx.imageSmoothingQuality = 'high';
+                    nextCtx.drawImage(tempCanvas, 0, 0, currW, currH, 0, 0, nextW, nextH);
+                    tempCanvas = nextCanvas;
+                    currW = nextW;
+                    currH = nextH;
+                }
+                ctx.drawImage(tempCanvas, 0, 0, currW, currH, 0, 0, targetWidth, targetHeight);
+            } else {
+                ctx.drawImage(sourceImage, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+            }
         }
 
         downloadBtn.onclick = async () => {

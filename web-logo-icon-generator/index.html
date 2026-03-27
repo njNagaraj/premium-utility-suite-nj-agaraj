@@ -93,6 +93,8 @@
             display: block;
             margin: 0 auto 0.5rem;
             background: #eee;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         .preview-item.large img { max-width: 120px; }
         button {
@@ -171,6 +173,40 @@
 
         let sourceImage = null;
 
+        function stepDownScale(img, targetSize) {
+            let currW = img.width;
+            let currH = img.height;
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext('2d');
+            canvas.width = currW;
+            canvas.height = currH;
+            ctx.drawImage(img, 0, 0);
+
+            while (currW > targetSize * 2) {
+                let nextW = Math.floor(currW / 2);
+                let nextH = Math.floor(currH / 2);
+                let nextCanvas = document.createElement('canvas');
+                let nextCtx = nextCanvas.getContext('2d');
+                nextCanvas.width = nextW;
+                nextCanvas.height = nextH;
+                nextCtx.imageSmoothingEnabled = true;
+                nextCtx.imageSmoothingQuality = 'high';
+                nextCtx.drawImage(canvas, 0, 0, currW, currH, 0, 0, nextW, nextH);
+                canvas = nextCanvas;
+                currW = nextW;
+                currH = nextH;
+            }
+
+            let finalCanvas = document.createElement('canvas');
+            let finalCtx = finalCanvas.getContext('2d');
+            finalCanvas.width = targetSize;
+            finalCanvas.height = targetSize;
+            finalCtx.imageSmoothingEnabled = true;
+            finalCtx.imageSmoothingQuality = 'high';
+            finalCtx.drawImage(canvas, 0, 0, currW, currH, 0, 0, targetSize, targetSize);
+            return finalCanvas;
+        }
+
         dropZone.onclick = () => fileInput.click();
         dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
         dropZone.ondragleave = () => dropZone.classList.remove('dragover');
@@ -200,12 +236,7 @@
         function generatePreviews() {
             previewGrid.innerHTML = '';
             ASSETS.forEach(asset => {
-                const canvas = document.createElement('canvas');
-                canvas.width = asset.size;
-                canvas.height = asset.size;
-                const ctx = canvas.getContext('2d');
-                ctx.imageSmoothingQuality = 'high';
-                ctx.drawImage(sourceImage, 0, 0, asset.size, asset.size);
+                const canvas = stepDownScale(sourceImage, asset.size);
 
                 const item = document.createElement('div');
                 item.className = 'preview-item' + (asset.size > 48 ? ' large' : '');
@@ -260,12 +291,7 @@
 
         function imgToBlob(size) {
             return new Promise(resolve => {
-                const canvas = document.createElement('canvas');
-                canvas.width = size;
-                canvas.height = size;
-                const ctx = canvas.getContext('2d');
-                ctx.imageSmoothingQuality = 'high';
-                ctx.drawImage(sourceImage, 0, 0, size, size);
+                const canvas = stepDownScale(sourceImage, size);
                 canvas.toBlob(resolve, 'image/png');
             });
         }
