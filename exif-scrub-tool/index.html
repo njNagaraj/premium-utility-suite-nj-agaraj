@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXIF Scrubber - Privacy-First Image Cleaner</title>
+    <meta name="description" content="Remove sensitive GPS, camera model, and timestamp metadata from your photos before sharing. 100% browser-based privacy.">
+    <meta property="og:description" content="Remove GPS and camera metadata from your photos before posting online. 100% private.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Privacy EXIF Scrubber",
+      "operatingSystem": "All",
+      "applicationCategory": "SecurityApplication",
+      "description": "Remove GPS and camera metadata from your photos before posting online. 100% private.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --accent: #ef4444;
+            --text: #f8fafc;
+            --card: #1e293b;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 4rem 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .header { margin-bottom: 3rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        p { color: #94a3b8; font-size: 1.1rem; }
+
+        .drop-zone {
+            border: 2px dashed #475569;
+            border-radius: 24px;
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 2rem;
+        }
+        .drop-zone:hover { border-color: var(--accent); background: rgba(239, 68, 68, 0.05); }
+        .drop-zone h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+        
+        .status {
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            font-weight: 600;
+            display: none;
+        }
+
+        .privacy-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+        input[type="file"] { display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>EXIF Data Scrubber</h1>
+        <p><strong>Privacy-First Utility:</strong> Strip sensitive metadata (GPS location, Camera data, and Timestamps) from your photos entirely in your browser.</p>
+        <div class="privacy-badge">🛡️ Client-Side Only. No Data Uploaded.</div>
+    </div>
+
+    <div id="dropZone" class="drop-zone">
+        <h2>Drop Image Here</h2>
+        <p>or click to browse</p>
+        <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <div id="status" class="status">DONE! Metadata Stripped & Image Downloaded.</div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+
+        dropZone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => scrub(e.target.files[0]);
+        dropZone.ondrop = (e) => { e.preventDefault(); scrub(e.dataTransfer.files[0]); };
+        dropZone.ondragover = (e) => e.preventDefault();
+
+        function scrub(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                // canvas.toBlob / toDataURL strips ALL EXIF data by default
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = "cleansed_" + file.name;
+                    link.click();
+                    
+                    status.style.display = 'block';
+                    setTimeout(() => status.style.display = 'none', 5000);
+                }, 'image/jpeg', 0.95);
+            };
+            img.src = URL.createObjectURL(file);
+        }
+    </script>
+</body>
+</html>

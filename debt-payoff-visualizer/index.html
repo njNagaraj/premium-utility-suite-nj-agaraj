@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debt Payoff Visualizer - Interactive Finance Tools</title>
+    <meta property="og:description" content="Visualize your journey to financial freedom with interactive debt payoff charts.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Debt Payoff Visualizer",
+      "operatingSystem": "All",
+      "applicationCategory": "FinanceApplication",
+      "description": "Visualize your journey to financial freedom with interactive debt payoff charts.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <meta name="description" content="Visualize your debt repayment timeline. Adjust interest rates and monthly payments to see real-time impact on your financial goals.">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --accent: #3b82f6;
+            --text: #f8fafc;
+            --card: #1e293b;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 4rem 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header { text-align: center; margin-bottom: 3rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        p { color: #94a3b8; font-size: 1.1rem; }
+
+        .grid { display: grid; grid-template-columns: 350px 1fr; gap: 2rem; }
+        .card { background: var(--card); border: 1px solid var(--border); padding: 2rem; border-radius: 24px; }
+        
+        .input-group { margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+        input {
+            width: 100%;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+        input:focus { border-color: var(--accent); }
+
+        .chart-container { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; height: 100%; min-height: 400px; }
+        
+        .privacy-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Debt Payoff Visualizer</h1>
+        <p><strong>Professional Finance Utility:</strong> Project your repayment timeline and see the impact of interest in real-time. Fast, secure, and purely browser-based.</p>
+        <div class="privacy-badge">🛡️ Client-Side Only. Your Financial Data Stays Private.</div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="input-group">
+                <label>Choose Currency</label>
+                <select id="currency" onchange="update()" style="width: 100%; padding: 1rem; border-radius: 12px; background: rgba(0,0,0,0.2); color: #fff; border: 1px solid var(--border); margin-bottom: 1rem;">
+                    <option value="$">USD ($)</option>
+                    <option value="€">EUR (€)</option>
+                    <option value="£">GBP (£)</option>
+                    <option value="₹">INR (₹)</option>
+                    <option value="¥">JPY (¥)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Current Balance (<span class="curr-val">$</span>)</label>
+                <input type="number" id="bal" value="5000" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Interest Rate (APR %)</label>
+                <input type="number" id="rate" value="18" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Monthly Payment (<span class="curr-val">$</span>)</label>
+                <input type="number" id="pay" value="300" oninput="update()">
+            </div>
+            
+            <div id="summary" style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 12px; font-size: 0.9rem; color: #94a3b8;">
+                Loading projection...
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="debtChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let chart;
+
+        function update() {
+            const sym = document.getElementById('currency').value;
+            document.querySelectorAll('.curr-val').forEach(el => el.innerText = sym);
+
+            const bal = parseFloat(document.getElementById('bal').value) || 0;
+            const rate = (parseFloat(document.getElementById('rate').value) || 0) / 100 / 12;
+            const pay = parseFloat(document.getElementById('pay').value) || 0;
+
+            // --- SAVE ---
+            localStorage.setItem('debt_v_data', JSON.stringify({ bal, rate: parseFloat(document.getElementById('rate').value), pay, sym }));
+
+            let current = bal;
+            let totalInterest = 0;
+            const history = [bal];
+            const labels = ["Start"];
+            
+            for(let i=1; i<=60; i++) { // Max 5 year projection
+                const interest = current * rate;
+                totalInterest += interest;
+                current = current + interest - pay;
+                
+                if (current < 0) current = 0;
+                history.push(current.toFixed(2));
+                labels.push("M" + i);
+                if (current <= 0) break;
+            }
+
+            document.getElementById('summary').innerHTML = `
+                Months to payoff: <strong>${labels.length - 1}</strong><br>
+                Total Interest Paid: <strong>${sym}${totalInterest.toFixed(2)}</strong>
+            `;
+
+            const ctx = document.getElementById('debtChart').getContext('2d');
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Remaining Balance (${sym})`,
+                        data: history,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { callback: function(value) { return sym + value; } }
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { 
+                        legend: { display: true, labels: { color: '#94a3b8' } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Balance: ${sym}${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- LOAD ---
+        window.onload = () => {
+            const saved = localStorage.getItem('debt_v_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('bal').value = data.bal;
+                document.getElementById('rate').value = data.rate;
+                document.getElementById('pay').value = data.pay;
+                document.getElementById('currency').value = data.sym;
+            }
+            update();
+        };
+    </script>
+</body>
+</html>

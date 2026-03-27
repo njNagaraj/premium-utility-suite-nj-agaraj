@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interval Timer - HIIT & Pomodoro Tool</title>
+    <meta property="og:description" content="High-contrast HIIT and Productivity timer. Works offline, no ads.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Premium Interval Timer",
+      "operatingSystem": "All",
+      "applicationCategory": "FitnessApplication",
+      "description": "High-contrast HIIT and Productivity timer. Works offline, no ads.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <meta name="description" content="High-precision interval timer for workouts and productivity. Fullscreen friendly, audio alerts, and 100% browser-based.">
+    <style>
+        :root {
+            --bg: #000;
+            --accent: #10b981;
+            --text: #fff;
+            --card: #111;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 2rem;
+            overflow: hidden;
+        }
+        .timer-val {
+            font-size: 15rem;
+            font-weight: 900;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.05em;
+            line-height: 1;
+        }
+        .controls { display: flex; gap: 1.5rem; margin-top: 3rem; width: 100%; max-width: 500px; }
+        button {
+            flex: 1;
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .btn-start { background: var(--accent); color: #000; }
+        .btn-reset { background: #333; color: #fff; }
+        button:hover { transform: scale(1.05); filter: brightness(1.2); }
+        
+        .settings { margin-top: 3rem; color: #666; font-size: 0.9rem; }
+        input { background: none; border: 1px solid #333; color: #fff; padding: 0.5rem; border-radius: 8px; width: 80px; text-align: center; }
+
+        .privacy-badge {
+            position: absolute;
+            bottom: 2rem;
+            color: #444;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-val" id="display">25:00</div>
+    
+    <div class="controls">
+        <button class="btn-start" id="startBtn" onclick="toggle()">Start</button>
+        <button class="btn-reset" onclick="reset()">Reset</button>
+    </div>
+
+    <div class="settings">
+        Set Duration: <input type="number" id="minutes" value="25" oninput="reset()"> minutes
+    </div>
+
+    <div class="privacy-badge">🛡️ Offline-Ready. No Data Collected.</div>
+
+    <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+    <script>
+        let interval;
+        let timeLeft = 1500;
+        let running = false;
+
+        function updateDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('display').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function toggle() {
+            if (running) {
+                clearInterval(interval);
+                document.getElementById('startBtn').innerText = "Start";
+            } else {
+                interval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
+                        document.getElementById('beep').play();
+                        timeLeft = 0;
+                    }
+                    updateDisplay();
+                }, 1000);
+                document.getElementById('startBtn').innerText = "Pause";
+            }
+            running = !running;
+        }
+
+        function reset() {
+            clearInterval(interval);
+            running = false;
+            document.getElementById('startBtn').innerText = "Start";
+            const m = parseInt(document.getElementById('minutes').value) || 25;
+            timeLeft = m * 60;
+            localStorage.setItem('timer_mins', m);
+            updateDisplay();
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem('timer_mins');
+            if (saved) {
+                document.getElementById('minutes').value = saved;
+                reset();
+            }
+        };
+    </script>
+</body>
+</html>

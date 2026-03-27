@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Pro Unit Converter - Precision Kitchen Tools</title>
+    <meta property="og:description" content="Professional kitchen units and weight converter for chefs and home cooks.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Recipe Pro Converter",
+      "operatingSystem": "All",
+      "applicationCategory": "LifestyleApplication",
+      "description": "Professional kitchen units and weight converter for chefs and home cooks.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <meta name="description" content="Accurate kitchen unit conversions for professional recipes. Convert between Grams, Ounces, Cups, and more. 100% browser-based.">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --accent: #f97316;
+            --text: #f8fafc;
+            --card: #1e293b;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 4rem 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header { text-align: center; margin-bottom: 3rem; }
+        h1 { font-size: 2.25rem; margin-bottom: 0.5rem; color: var(--accent); }
+        p { color: #94a3b8; font-size: 1.1rem; }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+        label { display: block; font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+        input, select {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+        }
+        input:focus { border-color: var(--accent); }
+
+        .result-box {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(249, 115, 22, 0.05);
+            border-radius: 16px;
+            border: 1px dashed var(--accent);
+        }
+        .result-val { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+        .result-label { font-size: 0.9rem; color: #94a3b8; text-transform: uppercase; }
+
+        .privacy-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Recipe Pro Converter</h1>
+        <p><strong>Professional Kitchen Utility:</strong> Accurate conversions for chefs and hobbyists. Scale your recipes perfectly every time.</p>
+    </div>
+
+    <div class="card">
+        <div class="input-row">
+            <div>
+                <label>Amount</label>
+                <input type="number" id="amount" value="1" oninput="convert()">
+            </div>
+            <div>
+                <label>From Unit</label>
+                <select id="fromUnit" onchange="convert()">
+                    <option value="cup">Cups (US)</option>
+                    <option value="oz">Ounces (fl)</option>
+                    <option value="gram">Grams</option>
+                    <option value="ml">Milliliters</option>
+                    <option value="tbsp">Tablespoons</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="result-box">
+            <div class="result-label">Converted Equivalence</div>
+            <div class="result-val" id="primaryResult">236.59</div>
+            <div id="secondaryResults" style="color: #94a3b8; font-size: 0.9rem;"></div>
+        </div>
+
+        <div class="privacy-badge">🛡️ Client-Side Only. 100% Private.</div>
+    </div>
+
+    <script>
+        const rates = {
+            cup: 236.588,
+            oz: 29.5735,
+            ml: 1,
+            gram: 1, // Fluid density approximation
+            tbsp: 14.7868
+        };
+
+        function convert() {
+            const val = parseFloat(document.getElementById('amount').value) || 0;
+            const unit = document.getElementById('fromUnit').value;
+            const baseMl = val * rates[unit];
+
+            localStorage.setItem('recipe_data', JSON.stringify({ val, unit }));
+
+            const results = [];
+            if (unit !== 'gram') results.push(`${(baseMl).toFixed(2)} Grams / ml`);
+            if (unit !== 'cup') results.push(`${(baseMl / rates.cup).toFixed(2)} Cups`);
+            if (unit !== 'oz') results.push(`${(baseMl / rates.oz).toFixed(2)} Ounces`);
+            if (unit !== 'tbsp') results.push(`${(baseMl / rates.tbsp).toFixed(2)} Tbsp`);
+
+            document.getElementById('primaryResult').innerText = (baseMl).toFixed(2);
+            document.getElementById('secondaryResults').innerHTML = results.join(' • ');
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem('recipe_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('amount').value = data.val;
+                document.getElementById('fromUnit').value = data.unit;
+            }
+            convert();
+        };
+    </script>
+</body>
+</html>

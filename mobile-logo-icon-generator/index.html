@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile App Icon & Logo Generator - iOS & Android Assets</title>
+    <meta property="og:description" content="Create professional icons for iOS and Android apps instantly. 100% private browser processing.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Mobile App Icon Generator",
+      "operatingSystem": "All",
+      "applicationCategory": "DeveloperApplication",
+      "description": "Create professional icons for iOS and Android apps instantly. 100% private browser processing.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --accent: #10b981;
+            --border: #e5e7eb;
+            --secondary: #f3f4f6;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --text: #f8fafc;
+                --accent: #34d399;
+                --border: #334155;
+                --secondary: #1e293b;
+            }
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .header { margin-bottom: 2rem; }
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            background: var(--secondary);
+            transition: border-color 0.2s;
+        }
+        .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); }
+        .controls { margin-top: 2rem; display: none; }
+        .section-title { margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .preview-item {
+            background: var(--secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        .preview-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 0.5rem;
+            background: #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        input[type="file"] { display: none; }
+        .status { margin-top: 1rem; color: var(--accent); font-weight: 500; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Mobile App Icon & Logo Generator</h1>
+        <p><strong>Native iOS & Android Asset Suite:</strong> Generate complete icon sets for Apple and Google platforms. This tool handles all required DPI levels and provides a structured folder layout ready for your Xcode or Android Studio project.</p>
+    </div>
+
+    <div id="dropZone" class="drop-zone">
+        <p>Click or drag & drop your source image (PNG/JPG/SVG)</p>
+        <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <div id="controls" class="controls">
+        <h2 class="section-title">iOS Previews</h2>
+        <div id="iosGrid" class="preview-grid"></div>
+
+        <h2 class="section-title">Android Previews</h2>
+        <div id="androidGrid" class="preview-grid"></div>
+        
+        <div style="margin-top: 2rem; background: var(--secondary); padding: 1.5rem; border-radius: 8px;">
+            <h3>Mobile Integration Guide</h3>
+            <p>1. Extract the ZIP into your project assets.</p>
+            <p>2. Link the <code>ios/icon-1024.png</code> as your App Store icon.</p>
+            <p>3. Use the <code>android/</code> icons for different DPI levels in your project.</p>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <button id="downloadBtn">Download Mobile Icons ZIP</button>
+            <div id="status" class="status"></div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const controls = document.getElementById('controls');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const iosGrid = document.getElementById('iosGrid');
+        const androidGrid = document.getElementById('androidGrid');
+        const status = document.getElementById('status');
+
+        const IOS_SIZES = [20, 29, 40, 58, 60, 76, 80, 87, 120, 152, 167, 180, 1024];
+        const ANDROID_SIZES = [
+            { n: 'mdpi', s: 48 },
+            { n: 'hdpi', s: 72 },
+            { n: 'xhdpi', s: 96 },
+            { n: 'xxhdpi', s: 144 },
+            { n: 'xxxhdpi', s: 192 },
+            { n: 'playstore', s: 512 }
+        ];
+
+        let sourceImage = null;
+
+        dropZone.onclick = () => fileInput.click();
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
+        dropZone.ondragleave = () => dropZone.classList.remove('dragover');
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        };
+
+        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    sourceImage = img;
+                    generatePreviews();
+                    controls.style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function createPreviewItem(size, label) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(sourceImage, 0, 0, size, size);
+
+            const item = document.createElement('div');
+            item.className = 'preview-item';
+            const previewImg = new Image();
+            previewImg.src = canvas.toDataURL('image/png');
+            item.appendChild(previewImg);
+            item.innerHTML += `<div><strong>${size}x${size}</strong></div><div>${label}</div>`;
+            return item;
+        }
+
+        function generatePreviews() {
+            iosGrid.innerHTML = '';
+            androidGrid.innerHTML = '';
+            IOS_SIZES.forEach(s => iosGrid.appendChild(createPreviewItem(s, 'iOS')));
+            ANDROID_SIZES.forEach(a => androidGrid.appendChild(createPreviewItem(a.s, a.n)));
+        }
+
+        downloadBtn.onclick = async () => {
+            if (!sourceImage) return;
+            downloadBtn.disabled = true;
+            status.textContent = 'Generating multi-platform ZIP...';
+
+            const zip = new JSZip();
+            const iosFolder = zip.folder("ios");
+            const androidFolder = zip.folder("android");
+
+            // iOS
+            for (const s of IOS_SIZES) {
+                const blob = await imgToBlob(s);
+                iosFolder.file(`icon-${s}.png`, blob);
+            }
+
+            // Android
+            for (const a of ANDROID_SIZES) {
+                const blob = await imgToBlob(a.s);
+                androidFolder.file(`icon-${a.n}.png`, blob);
+            }
+
+            const content = await zip.generateAsync({type: "blob"});
+            const url = URL.createObjectURL(content);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = "mobile_app_icons.zip";
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            downloadBtn.disabled = false;
+            status.textContent = 'Done! Mobile icons downloaded.';
+        };
+
+        function imgToBlob(size) {
+            return new Promise(resolve => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(sourceImage, 0, 0, size, size);
+                canvas.toBlob(resolve, 'image/png');
+            });
+        }
+    </script>
+</body>
+</html>

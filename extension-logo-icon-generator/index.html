@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extension Icon & Logo Generator - Create Browser Extension Icons Fast</title>
+    <meta property="og:description" content="Generate high-quality browser extension icons (Chrome, Edge, Firefox) in seconds. 100% private.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Browser Extension Icon Generator",
+      "operatingSystem": "All",
+      "applicationCategory": "DeveloperApplication",
+      "description": "Generate high-quality browser extension icons (Chrome, Edge, Firefox) in seconds. 100% private.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <meta name="description" content="Generate all required icon sizes for your Chrome, Firefox, or Edge extension. Download a complete ZIP with manifest.json snippets in seconds.">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --accent: #2563eb;
+            --border: #e5e7eb;
+            --secondary: #f3f4f6;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --text: #f8fafc;
+                --accent: #3b82f6;
+                --border: #334155;
+                --secondary: #1e293b;
+            }
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .header { margin-bottom: 2rem; }
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            background: var(--secondary);
+            transition: border-color 0.2s;
+        }
+        .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); }
+        .controls { margin-top: 2rem; display: none; }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .preview-item {
+            background: var(--secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .preview-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 0.5rem;
+            background: #ccc;
+        }
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+        }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        input[type="file"] { display: none; }
+        .status { margin-top: 1rem; color: var(--accent); font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Extension Icon & Logo Generator</h1>
+        <p><strong>Complete Browser Asset Kit:</strong> Instantly generate all required icon sizes (16x16 to 512x512) for Chrome, Firefox, and Safari extensions. The tool automatically provides the necessary JSON manifest snippets for seamless integration.</p>
+    </div>
+
+    <div id="dropZone" class="drop-zone">
+        <p>Click or drag & drop your source image (PNG/JPG/SVG)</p>
+        <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <div id="controls" class="controls">
+        <div id="previewGrid" class="preview-grid"></div>
+
+        <div style="margin-top: 2rem;">
+            <h3>Manifest Snippet</h3>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Copy this into your <code>manifest.json</code>:</p>
+            <pre id="manifestCode" style="background: var(--secondary); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;"></pre>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <button id="downloadBtn">Download Icons ZIP</button>
+            <div id="status" class="status"></div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const controls = document.getElementById('controls');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const previewGrid = document.getElementById('previewGrid');
+        const status = document.getElementById('status');
+
+        const SIZES = [16, 32, 48, 64, 128, 512];
+        let sourceImage = null;
+
+        dropZone.onclick = () => fileInput.click();
+        
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
+        dropZone.ondragleave = () => dropZone.classList.remove('dragover');
+        dropZone.ondrop = (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        };
+
+        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    sourceImage = img;
+                    generatePreviews();
+                    updateManifestSnippet();
+                    controls.style.display = 'block';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateManifestSnippet() {
+            const manifest = {
+                "icons": {
+                    "16": "icons/icon16.png",
+                    "32": "icons/icon32.png",
+                    "48": "icons/icon48.png",
+                    "128": "icons/icon128.png"
+                },
+                "action": {
+                    "default_icon": {
+                        "16": "icons/icon16.png",
+                        "32": "icons/icon32.png"
+                    }
+                }
+            };
+            document.getElementById('manifestCode').textContent = JSON.stringify(manifest, null, 2);
+        }
+
+        function generatePreviews() {
+            previewGrid.innerHTML = '';
+            SIZES.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(sourceImage, 0, 0, size, size);
+
+                const item = document.createElement('div');
+                item.className = 'preview-item';
+                const previewImg = new Image();
+                previewImg.src = canvas.toDataURL('image/png');
+                item.appendChild(previewImg);
+                item.innerHTML += `<span>${size}x${size}</span>`;
+                previewGrid.appendChild(item);
+            });
+        }
+
+        downloadBtn.onclick = async () => {
+            if (!sourceImage) return;
+            downloadBtn.disabled = true;
+            status.textContent = 'Generating ZIP...';
+
+            const zip = new JSZip();
+            const iconsFolder = zip.folder("icons");
+
+            for (const size of SIZES) {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(sourceImage, 0, 0, size, size);
+                
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                iconsFolder.file(`icon${size}.png`, blob);
+            }
+
+            // Add a sample manifest.json
+            const manifest = {
+                "manifest_version": 3,
+                "name": "My Extension",
+                "version": "1.0",
+                "action": {
+                    "default_icon": {
+                        "16": "icons/icon16.png",
+                        "32": "icons/icon32.png",
+                        "48": "icons/icon48.png",
+                        "128": "icons/icon128.png"
+                    }
+                },
+                "icons": {
+                    "16": "icons/icon16.png",
+                    "32": "icons/icon32.png",
+                    "48": "icons/icon48.png",
+                    "128": "icons/icon128.png"
+                }
+            };
+            zip.file("manifest.json", JSON.stringify(manifest, null, 2));
+
+            const content = await zip.generateAsync({type: "blob"});
+            const url = URL.createObjectURL(content);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "extension_icons.zip";
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            downloadBtn.disabled = false;
+            status.textContent = 'Done!';
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to TypeScript - Professional Interface Generator</title>
+    <meta property="og:description" content="Convert JSON to clean TypeScript interfaces instantly. Developer utility.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "JSON to TypeScript Converter",
+      "operatingSystem": "All",
+      "applicationCategory": "DeveloperApplication",
+      "description": "Convert JSON to clean TypeScript interfaces instantly. Developer utility.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <meta name="description" content="Instantly convert JSON API responses into clean, typed TypeScript interfaces. High-performance, recursve parsing for complex objects. 100% private.">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --accent: #3b82f6;
+            --text: #f8fafc;
+            --card: #1e293b;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 3rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header { text-align: center; margin-bottom: 3rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        p { color: #94a3b8; font-size: 1.1rem; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; min-height: 500px; }
+        .card { display: flex; flex-direction: column; height: 100%; }
+        
+        label { display: block; font-weight: 700; margin-bottom: 1rem; color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
+        
+        textarea {
+            flex-grow: 1;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            resize: none;
+            outline: none;
+        }
+        textarea:focus { border-color: var(--accent); }
+
+        .controls { margin-top: 2rem; text-align: center; }
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+        .privacy-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>JSON to TypeScript Converter</h1>
+        <p><strong>Professional Developer Tool:</strong> Instantly transform your API responses into structured TypeScrpt interfaces. Handles nested objects and arrays with ease.</p>
+        <div class="privacy-badge">🛡️ Client-Side Only. No Data Uploaded.</div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <label>Input JSON</label>
+            <textarea id="jsonInput" placeholder='Paste your JSON here... Example:
+{
+  "user": {
+    "id": 1,
+    "name": "Admin"
+  }
+}'></textarea>
+        </div>
+        <div class="card">
+            <label>Output TypeScript</label>
+            <textarea id="tsOutput" readonly placeholder="Interface will appear here..."></textarea>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="convert()">Generate TS Interface</button>
+    </div>
+
+    <script>
+        function convert() {
+            const input = document.getElementById('jsonInput').value;
+            const output = document.getElementById('tsOutput');
+            
+            if (!input.trim()) return;
+
+            try {
+                const data = JSON.parse(input);
+                const interfaces = `interface RootObject {\n${processObject(data, 1)}}`;
+                output.value = interfaces;
+            } catch (e) {
+                output.value = "Error: Invalid JSON Format\n\n" + e.message;
+            }
+        }
+
+        function processObject(obj, depth) {
+            let res = "";
+            const indent = "  ".repeat(depth);
+            
+            for (const key in obj) {
+                const value = obj[key];
+                const type = typeof value;
+
+                if (value === null) {
+                    res += `${indent}${key}: any;\n`;
+                } else if (Array.isArray(value)) {
+                    const itemType = value.length > 0 ? (typeof value[0]) : 'any';
+                    res += `${indent}${key}: ${itemType}[];\n`;
+                } else if (type === 'object') {
+                    res += `${indent}${key}: {\n${processObject(value, depth + 1)}${indent}};\n`;
+                } else {
+                    res += `${indent}${key}: ${type};\n`;
+                }
+            }
+            return res;
+        }
+    </script>
+</body>
+</html>

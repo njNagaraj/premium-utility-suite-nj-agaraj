@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesh Gradient Generator - Premium Web Backgrounds</title>
+    <meta name="description" content="Generate trendy, high-performance mesh gradients using pure CSS radial-gradient layers. Copy-paste code instantly. 100% browser-based.">
+    <meta property="og:description" content="Create trendy mesh gradients for modern UI designs. Copy CSS instantly.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Mesh Gradient Studio",
+      "operatingSystem": "All",
+      "applicationCategory": "DesignApplication",
+      "description": "Create trendy mesh gradients for modern UI designs. Copy CSS instantly.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --accent: #6366f1;
+            --text: #f8fafc;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 1.5rem;
+            min-height: 100vh;
+        }
+        .container { max-width: 900px; width: 100%; text-align: center; }
+        .header { margin-bottom: 3rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        p { color: #94a3b8; font-size: 1.1rem; }
+
+        .preview-canvas {
+            width: 100%;
+            height: 450px;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            transition: background 0.5s ease;
+        }
+        .controls { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; }
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        .code-output {
+            background: #000;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            color: #10b981;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+        .privacy-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mesh Gradient Generator</h1>
+            <p><strong>Professional Design Utility:</strong> Generate sophisticated, multi-layered mesh backgrounds using only CSS. Fast, responsive, and purely browser-based.</p>
+            <div class="privacy-badge">🛡️ Client-Side Only. No Data Uploaded.</div>
+        </div>
+
+        <div id="preview" class="preview-canvas"></div>
+
+        <div class="controls">
+            <button onclick="generate()">Generate New Mesh</button>
+        </div>
+
+        <div class="code-output" id="output"></div>
+    </div>
+
+    <script>
+        const colors = [
+            '#6366f1', '#a855f7', '#ec4899', '#f97316', '#10b981', '#3b82f6', 
+            '#ef4444', '#f59e0b', '#06b6d4', '#8b5cf6', '#d946ef'
+        ];
+
+        function generate() {
+            const numPoints = 5;
+            let gradients = [];
+            
+            for(let i=0; i<numPoints; i++) {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const x = Math.floor(Math.random() * 100);
+                const y = Math.floor(Math.random() * 100);
+                const size = Math.floor(Math.random() * 60) + 40;
+                gradients.push(`radial-gradient(at ${x}% ${y}%, ${color} 0px, transparent ${size}%)`);
+            }
+
+            const css = `background-color: #000;\nbackground-image: \n  ${gradients.join(',\n  ')};`;
+            const preview = document.getElementById('preview');
+            const output = document.getElementById('output');
+            
+            preview.style.backgroundImage = gradients.join(',');
+            output.innerText = css;
+        }
+
+        generate();
+    </script>
+</body>
+</html>

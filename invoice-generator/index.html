@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Invoice Generator - Privacy-First Document Creation</title>
+    <meta property="og:description" content="Professional browser-based invoice generator. No server storage, 100% private.">
+    <meta name="description" content="Generate professional invoices instantly in your browser. Edit directly and print to PDF. 100% private, no data leaves your device.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Premium Invoice Generator",
+      "operatingSystem": "All",
+      "applicationCategory": "BusinessApplication",
+      "description": "Professional browser-based invoice generator. No server storage, 100% private.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --sidebar-bg: #0f172a;
+            --accent: #2563eb;
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+        .controls {
+            width: 300px;
+            background: var(--sidebar-bg);
+            color: #fff;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: fixed;
+            height: 100vh;
+        }
+        .main {
+            margin-left: 300px;
+            padding: 4rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .invoice-paper {
+            width: 800px;
+            background: #fff;
+            padding: 4rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            border-radius: 4px;
+            min-height: 1000px;
+        }
+        .invoice-header { display: flex; justify-content: space-between; margin-bottom: 3rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+        .invoice-title { font-size: 2rem; font-weight: 300; text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .label { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.5rem; font-weight: 700; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 3rem; }
+        th { text-align: left; padding: 1rem; border-bottom: 2px solid #f1f5f9; color: #64748b; font-size: 0.8rem; text-transform: uppercase; }
+        td { padding: 1rem; border-bottom: 1px solid #f1f5f9; }
+        
+        .totals { margin-left: auto; width: 250px; }
+        .total-row { display: flex; justify-content: space-between; padding: 0.75rem 0; font-weight: 700; }
+        .total-grand { font-size: 1.25rem; color: var(--accent); border-top: 2px solid #f1f5f9; margin-top: 1rem; }
+
+        button {
+            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        [contenteditable]:hover { background: #f8fafc; outline: 1px dashed #cbd5e1; }
+
+        @media print {
+            .controls { display: none; }
+            .main { margin: 0; padding: 0; background: #fff; }
+            .invoice-paper { box-shadow: none; width: 100%; }
+            body { background: #fff; }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h2>Invoice Builder</h2>
+        <p style="font-size: 0.85rem; color: #94a3b8;">Edit the invoice directly on the page. Click any field to change text.</p>
+        
+        <div style="margin-top: 1rem;">
+            <label style="color: #fff; font-size: 0.75rem; display: block; margin-bottom: 5px;">Choose Currency</label>
+            <select id="currencySelector" onchange="updateCurrency()" style="width: 100%; padding: 0.5rem; border-radius: 6px; background: #334155; color: #fff; border: none;">
+                <option value="$">USD ($)</option>
+                <option value="€">EUR (€)</option>
+                <option value="£">GBP (£)</option>
+                <option value="₹">INR (₹)</option>
+                <option value="¥">JPY (¥)</option>
+                <option value="A$">AUD (A$)</option>
+            </select>
+        </div>
+
+        <button onclick="window.print()">Download PDF / Print</button>
+        <div style="margin-top: auto; font-size: 0.75rem; color: #475569;">
+            🛡️ 100% Private. All processing remains on your device.
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="invoice-paper" id="invoice">
+            <div class="invoice-header">
+                <div>
+                    <div class="logo" contenteditable="true">MY COMPANY</div>
+                    <p contenteditable="true" style="color: #64748b; margin-top: 0.5rem;">Your Business Address<br>City, State, Zip</p>
+                </div>
+                <div class="invoice-title">Invoice</div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <div class="label">Bill To</div>
+                    <p contenteditable="true">Client Name<br>Client Address<br>City, State, Zip</p>
+                </div>
+                <div style="text-align: right;">
+                    <div class="label">Invoice Details</div>
+                    <p contenteditable="true"><strong>INV-001</strong><br>March 26, 2026</p>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th style="width: 100px;">Quantity</th>
+                        <th style="width: 150px; text-align: right;">Price (<span class="curr-sym">$</span>)</th>
+                    </tr>
+                </thead>
+                <tbody id="items">
+                    <tr>
+                        <td contenteditable="true">Professional Design Services</td>
+                        <td contenteditable="true">1</td>
+                        <td contenteditable="true" style="text-align: right;"><span class="curr-sym">$</span>1,200.00</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Frontend Development Phase 1</td>
+                        <td contenteditable="true">40 hrs</td>
+                        <td contenteditable="true" style="text-align: right;"><span class="curr-sym">$</span>3,000.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="totals">
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span contenteditable="true"><span class="curr-sym">$</span>4,200.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Tax (0%)</span>
+                    <span contenteditable="true"><span class="curr-sym">$</span>0.00</span>
+                </div>
+                <div class="total-row total-grand">
+                    <span>Total Due</span>
+                    <span contenteditable="true"><span class="curr-sym">$</span>4,200.00</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 10rem; border-top: 1px solid #f1f5f9; padding-top: 2rem;">
+                <div class="label">Notes</div>
+                <p contenteditable="true" style="font-size: 0.9rem; color: #64748b;">Thank you for your business! Please pay within 15 days.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCurrency() {
+            const sym = document.getElementById('currencySelector').value;
+            document.querySelectorAll('.curr-sym').forEach(el => {
+                el.innerText = sym;
+            });
+            saveData();
+        }
+
+        // --- NEW: PERSISTENCE ---
+        function saveData() {
+            const data = {
+                html: document.getElementById('invoice').innerHTML,
+                currency: document.getElementById('currencySelector').value
+            };
+            localStorage.setItem('premium_invoice_data', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('premium_invoice_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('invoice').innerHTML = data.html;
+                document.getElementById('currencySelector').value = data.currency;
+            }
+        }
+
+        // Save on any input
+        document.getElementById('invoice').addEventListener('input', saveData);
+        window.onload = loadData;
+    </script>
+</body>
+</html>

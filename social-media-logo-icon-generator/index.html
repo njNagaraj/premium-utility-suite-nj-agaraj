@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Asset Suite - Instant Professional Crops (No Uploads)</title>
+    <meta name="description" content="Generate high-quality social media crops for Instagram, Twitter, LinkedIn, and YouTube instantly. 100% browser-based, lossless quality, and zero data storage.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Social Media Asset Suite",
+      "operatingSystem": "All",
+      "applicationCategory": "MultimediaApplication",
+      "description": "Generate perfectly sized social media icons and header assets instantly.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    <meta name="keywords" content="social media icon generator, instagram post crop, twitter header resizer, linkedin banner maker, youtube thumbnail generator, browser-based image cropper">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://njnagaraj.github.io/icon-logo-generator-suite-nj/social-media-logo-icon-generator/">
+    <meta property="og:title" content="Social Media Asset Suite - Professional Crops Instantly">
+    <meta property="og:description" content="One-click, lossless crops for all major social platforms. All processing happens in your browser for 100% privacy.">
+    <meta property="og:image" content="https://njnagaraj.github.io/icon-logo-generator-suite-nj/social-media-logo-icon-generator/screenshot.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://njnagaraj.github.io/icon-logo-generator-suite-nj/social-media-logo-icon-generator/">
+    <meta property="twitter:title" content="Social Media Asset Suite - Professional Crops">
+    <meta property="twitter:description" content="One-click, lossless crops for all major social platforms. 100% private.">
+    
+    <link rel="canonical" href="https://njnagaraj.github.io/icon-logo-generator-suite-nj/social-media-logo-icon-generator/" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --accent: #6366f1;
+            --border: #1e293b;
+            --card: #1e293b;
+            --success: #10b981;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text) ;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            line-height: 1.6;
+        }
+        .header { text-align: center; margin-bottom: 3rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .privacy-badge::before { content: '🛡️'; margin-right: 8px; }
+
+        .drop-zone {
+            border: 2px dashed #475569;
+            border-radius: 16px;
+            padding: 5rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+        }
+        .drop-zone:hover { border-color: var(--accent); background: rgba(99, 102, 241, 0.05); }
+        
+        .controls { margin-top: 3rem; display: none; }
+        .platform-section { margin-top: 4rem; }
+        .platform-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            color: #fff;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .preview-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+        .preview-card canvas {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .adjustment-controls {
+            margin-top: auto;
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .control-group { margin-bottom: 0.75rem; }
+        .control-group:last-child { margin-bottom: 0; }
+        .control-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+            cursor: ew-resize;
+        }
+        
+        .label { font-size: 1rem; font-weight: 700; margin-top: 1rem; }
+        .dim { font-size: 0.85rem; color: #64748b; margin-top: 2px; }
+
+        .download-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            padding: 1rem 3rem;
+            border-radius: 99px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            z-index: 100;
+            transition: all 0.2s;
+            border: none;
+            color: white;
+        }
+        .download-bar:hover { transform: translateX(-50%) translateY(-4px); box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4); }
+        .download-bar:disabled { background: #475569; cursor: not-allowed; }
+
+        input[type="file"] { display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Social Media Asset Suite</h1>
+        <p><strong>One-Click Platform Optimization:</strong> Generate perfect crops for Instagram, Twitter, LinkedIn, and YouTube from a single photo. Use the interactive sliders to frame your shots perfectly without losing a single pixel of quality.</p>
+        <div class="privacy-badge">No images are stored or uploaded. All processing happens locally.</div>
+    </div>
+
+    <div id="dropZone" class="drop-zone">
+        <p>Click or drag & drop high-resolution photo</p>
+        <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <div id="controls" class="controls">
+        <div id="content"></div>
+        <button id="downloadBtn" class="download-bar">Download All Assets (.ZIP)</button>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const controls = document.getElementById('controls');
+        const content = document.getElementById('content');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        const CONFIG = [
+            { platform: 'Instagram', crops: [
+                { id: 'insta-sq', name: 'Square', w: 1080, h: 1080 },
+                { id: 'insta-st', name: 'Story', w: 1080, h: 1920 },
+                { id: 'insta-po', name: 'Portrait', w: 1080, h: 1350 }
+            ]},
+            { platform: 'Twitter (X)', crops: [
+                { id: 'tw-hd', name: 'Header', w: 1500, h: 500 },
+                { id: 'tw-po', name: 'Post', w: 1200, h: 675 }
+            ]},
+            { platform: 'LinkedIn', crops: [
+                { id: 'li-pr', name: 'Profile', w: 400, h: 400 },
+                { id: 'li-cv', name: 'Cover', w: 1584, h: 396 },
+                { id: 'li-po', name: 'Post', w: 1200, h: 627 }
+            ]},
+            { platform: 'YouTube', crops: [
+                { id: 'yt-th', name: 'Thumbnail', w: 1280, h: 720 },
+                { id: 'yt-ch', name: 'Channel Art', w: 2560, h: 1440 }
+            ]}
+        ];
+
+        let sourceImage = null;
+        let cropState = {}; // Storage for { cropId: { x: 0.5, y: 0.5 } } -> values 0 to 1
+
+        dropZone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; };
+        dropZone.ondrop = (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    sourceImage = img;
+                    initCropState();
+                    renderCategories();
+                    controls.style.display = 'block';
+                    window.scrollTo({ top: dropZone.offsetTop + 100, behavior: 'smooth' });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function initCropState() {
+            cropState = {};
+            CONFIG.forEach(cat => {
+                cat.crops.forEach(crop => {
+                    cropState[crop.id] = { x: 0.5, y: 0.5 };
+                });
+            });
+        }
+
+        function renderCategories() {
+            content.innerHTML = '';
+            CONFIG.forEach(cat => {
+                const section = document.createElement('div');
+                section.className = 'platform-section';
+                section.innerHTML = `<h2 class="platform-title">${cat.platform}</h2>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'preview-grid';
+                
+                cat.crops.forEach(crop => {
+                    grid.appendChild(createCropCard(crop));
+                });
+                
+                section.appendChild(grid);
+                content.appendChild(section);
+            });
+        }
+
+        function createCropCard(crop) {
+            const card = document.createElement('div');
+            card.className = `preview-card`;
+            
+            const canvas = document.createElement('canvas');
+            canvas.id = `canvas-${crop.id}`;
+            canvas.width = crop.w;
+            canvas.height = crop.h;
+            
+            const info = document.createElement('div');
+            info.innerHTML = `<div class="label">${crop.name}</div><div class="dim">${crop.w} x ${crop.h}</div>`;
+            
+            const adj = document.createElement('div');
+            adj.className = 'adjustment-controls';
+            
+            // Check if horizontal movement is possible
+            const targetAspect = crop.w / crop.h;
+            const sourceAspect = sourceImage.width / sourceImage.height;
+            
+            if (sourceAspect > targetAspect) {
+                // Horizontal adjustment possible
+                adj.appendChild(createSlider(crop.id, 'x', 'Horizontal Pan'));
+            } else if (sourceAspect < targetAspect) {
+                // Vertical adjustment possible
+                adj.appendChild(createSlider(crop.id, 'y', 'Vertical Pan'));
+            } else {
+                adj.innerHTML = `<p style="font-size:0.75rem; color:#64748b; text-align:center;">Perfect Fit</p>`;
+            }
+            
+            card.appendChild(canvas);
+            card.appendChild(info);
+            card.appendChild(adj);
+            
+            // Initial Draw
+            setTimeout(() => drawCrop(crop.id, canvas), 0);
+            
+            return card;
+        }
+
+        function createSlider(cropId, axis, label) {
+            const div = document.createElement('div');
+            div.className = 'control-group';
+            div.innerHTML = `<label>${label}</label>`;
+            
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.min = 0;
+            slider.max = 1;
+            slider.step = 0.01;
+            slider.value = cropState[cropId][axis];
+            
+            slider.oninput = (e) => {
+                cropState[cropId][axis] = parseFloat(e.target.value);
+                drawCrop(cropId, document.getElementById(`canvas-${cropId}`));
+            };
+            
+            div.appendChild(slider);
+            return div;
+        }
+
+        function drawCrop(cropId, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingQuality = 'high';
+            
+            const state = cropState[cropId];
+            const targetWidth = canvas.width;
+            const targetHeight = canvas.height;
+            const sourceWidth = sourceImage.width;
+            const sourceHeight = sourceImage.height;
+
+            const targetAspect = targetWidth / targetHeight;
+            const sourceAspect = sourceWidth / sourceHeight;
+
+            let sWidth, sHeight, sx, sy;
+
+            if (sourceAspect > targetAspect) {
+                // Thicker/Wider source
+                sHeight = sourceHeight;
+                sWidth = sourceHeight * targetAspect;
+                sy = 0;
+                sx = (sourceWidth - sWidth) * state.x;
+            } else {
+                // Taller source
+                sWidth = sourceWidth;
+                sHeight = sourceWidth / targetAspect;
+                sx = 0;
+                sy = (sourceHeight - sHeight) * state.y;
+            }
+
+            ctx.clearRect(0,0,targetWidth, targetHeight);
+            ctx.drawImage(sourceImage, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+        }
+
+        downloadBtn.onclick = async () => {
+            downloadBtn.disabled = true;
+            downloadBtn.textContent = 'Generating High-Res ZIP...';
+            
+            const zip = new JSZip();
+            
+            for (const cat of CONFIG) {
+                const folder = zip.folder(cat.platform.replace(/\s/g, '_'));
+                for (const crop of cat.crops) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = crop.w;
+                    canvas.height = crop.h;
+                    drawCrop(crop.id, canvas);
+                    
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 1.0));
+                    folder.file(`${crop.name.replace(/\s/g, '_')}.jpg`, blob);
+                }
+            }
+
+            const contentZip = await zip.generateAsync({type: "blob"});
+            const url = URL.createObjectURL(contentZip);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = "Social_Media_Professional_Assets.zip";
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            downloadBtn.disabled = false;
+            downloadBtn.textContent = 'Download All Assets (.ZIP)';
+        };
+    </script>
+</body>
+</html>

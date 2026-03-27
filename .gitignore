@@ -1,0 +1,13 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+node_modules/
+.vscode/
+.idea/
+
+# Local envs
+.env
+.env.local
