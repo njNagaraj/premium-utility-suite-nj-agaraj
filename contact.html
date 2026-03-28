@@ -4,14 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Premium Utility Suite</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="canonical" href="https://static-apps-nj.pages.dev/contact" />
+    <meta property="og:title" content="Contact Us - Premium Utility Suite | Support & Feedback">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://static-apps-nj.pages.dev/contact">
+    <meta name="description" content="Get in touch with the Premium Utility Suite team. Report bugs, suggest tools, or provide feedback.">
     <style>
         :root { --bg: #0f172a; --text: #f8fafc; --accent: #6366f1; --border: #1e293b; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; max-width: 800px; margin: 4rem auto; padding: 0 1.5rem; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; max-width: 800px; margin: 4rem auto; padding: 0 1.5rem; min-height: 100vh; display: flex; flex-direction: column; }
         h1 { color: #fff; font-size: 2.5rem; margin-bottom: 2rem; border-bottom: 2px solid var(--accent); padding-bottom: 1rem; }
         .back-link { display: inline-block; margin-bottom: 2rem; color: var(--accent); text-decoration: none; font-weight: 600; }
         .back-link:hover { text-decoration: underline; }
         .contact-card { background: var(--border); padding: 3rem; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .email { font-size: 1.5rem; color: var(--accent); font-weight: 700; margin: 1.5rem 0; display: block; }
+
+        /* Unified Footer Styles */
+        .site-footer { margin-top: auto; padding: 3rem 1.5rem; background: rgba(15, 23, 42, 0.8); border-top: 1px solid var(--border); text-align: center; backdrop-filter: blur(10px); width: 100%; margin-left: calc(-1 * (100vw - 100%) / 2); width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .footer-links a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-tagline { color: #64748b; font-size: 0.85rem; margin-bottom: 1rem; }
+        .footer-copyright { color: #475569; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -24,8 +39,18 @@
         <p style="font-size: 0.9rem; color: #64748b;">We typically respond within 24-48 business hours.</p>
     </div>
 
-    <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; color: #64748b; font-size: 0.85rem;">
-        &copy; 2026 Premium Utility Suite. All rights reserved.
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <p class="footer-tagline">Premium Utility Suite - 12+ Professional Tools. 100% Private. 100% Free.</p>
+            <p class="footer-copyright">&copy; 2026 Premium Utility Suite. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 </html>

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url><loc>https://yourdomain.com/</loc><priority>1.0</priority></url>
-    <url><loc>https://yourdomain.com/social-media-logo-icon-generator/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/extension-logo-icon-generator/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/mobile-logo-icon-generator/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/web-logo-icon-generator/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/glassmorphism-generator/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/mesh-gradient-generator/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/json-to-typescript/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/invoice-generator/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/exif-scrub-tool/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/recipe-pro-converter/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/interval-timer-pwa/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/debt-payoff-visualizer/</loc><priority>0.8</priority></url>
-    <url><loc>https://yourdomain.com/about.html</loc><priority>0.5</priority></url>
-    <url><loc>https://yourdomain.com/privacy.html</loc><priority>0.5</priority></url>
-    <url><loc>https://yourdomain.com/terms.html</loc><priority>0.5</priority></url>
-    <url><loc>https://yourdomain.com/contact.html</loc><priority>0.5</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/</loc><priority>1.0</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/social-media-logo-icon-generator/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/extension-logo-icon-generator/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/mobile-logo-icon-generator/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/web-logo-icon-generator/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/glassmorphism-generator/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/mesh-gradient-generator/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/json-to-typescript/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/invoice-generator/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/exif-scrub-tool/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/recipe-pro-converter/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/interval-timer-pwa/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/debt-payoff-visualizer/</loc><priority>0.8</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/about.html</loc><priority>0.5</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/privacy.html</loc><priority>0.5</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/terms.html</loc><priority>0.5</priority></url>
+    <url><loc>https://static-apps-nj.pages.dev/contact.html</loc><priority>0.5</priority></url>
 </urlset>

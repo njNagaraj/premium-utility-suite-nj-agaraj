@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Media Asset Suite - Instant Professional Crops (No Uploads)</title>
-    <meta name="description" content="Generate high-quality social media crops for Instagram, Twitter, LinkedIn, and YouTube instantly. 100% browser-based, lossless quality, and zero data storage.">
-    
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="canonical" href="https://static-apps-nj.pages.dev/social-media-logo-icon-generator/" />
+    <meta property="og:title" content="Social Media Asset Suite - Instant Professional Crops">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://static-apps-nj.pages.dev/social-media-logo-icon-generator/">
+    <meta property="og:description" content="One-click social media image optimization. Generate perfect crops for Instagram, Twitter, LinkedIn, and YouTube. 100% private.">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -343,6 +347,9 @@
             const adj = document.createElement('div');
             adj.className = 'adjustment-controls';
             
+            const sourceAspect = sourceImage.width / sourceImage.height;
+            const targetAspect = crop.w / crop.h;
+
             if (Math.abs(sourceAspect - targetAspect) > 0.01) {
                 adj.appendChild(createSlider(crop.id, 'x', 'Horizontal Pan'));
                 adj.appendChild(createSlider(crop.id, 'y', 'Vertical Pan'));
