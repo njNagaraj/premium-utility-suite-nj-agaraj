@@ -18,6 +18,8 @@
     }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     <style>
         :root {
             --bg: #ffffff;
@@ -117,6 +119,39 @@
         .download-bar:disabled { background: #475569; cursor: not-allowed; }
         input[type="file"] { display: none; }
         .status { margin-top: 1rem; color: var(--accent); font-weight: 500; text-align: center; }
+
+        .deep-dive {
+            margin-top: 6rem;
+            background: var(--secondary);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        .deep-dive h3 { color: var(--text); margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #94a3b8; margin-bottom: 1rem; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: var(--text); }
+        .copyright { color: #475569; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -131,24 +166,44 @@
     </div>
 
     <div id="controls" class="controls">
-        <h2 class="section-title">iOS Previews</h2>
+        <h2 class="section-title">iOS Assets</h2>
         <div id="iosGrid" class="preview-grid"></div>
-
-        <h2 class="section-title">Android Previews</h2>
-        <div id="androidGrid" class="preview-grid"></div>
         
-        <div style="margin-top: 2rem; background: var(--secondary); padding: 1.5rem; border-radius: 8px;">
-            <h3>Mobile Integration Guide</h3>
-            <p>1. Extract the ZIP into your project assets.</p>
-            <p>2. Link the <code>ios/icon-1024.png</code> as your App Store icon.</p>
-            <p>3. Use the <code>android/</code> icons for different DPI levels in your project.</p>
-        </div>
+        <h2 class="section-title">Android Assets</h2>
+        <div id="androidGrid" class="preview-grid"></div>
 
-        <div style="margin-top: 2rem; margin-bottom: 5rem;">
+        <div style="margin-top: 4rem; margin-bottom: 5rem;">
             <button id="downloadBtn" class="download-bar">Download Mobile Icons ZIP</button>
             <div id="status" class="status"></div>
         </div>
     </div>
+
+
+
+    <section class="deep-dive">
+        <h3>Mastering Mobile App Iconography</h3>
+        <p>In the competitive App Store and Play Store landscapes, your icon is your most important marketing asset. It must be recognizable at small sizes and represent your brand's core value.</p>
+        
+        <h4>iOS vs. Android Design Philosophies</h4>
+        <p>Apple emphasizes simplicity and uniform corner rounding (squircle), while Android (via Adaptive Icons) allow for different shapes like circles, squares, or rounded rects depending on the device theme. Our tool provides all the resolutions required to satisfy both human interface guidelines and material design standards.</p>
+        
+        <h4>DPI Scale & Resolution Management</h4>
+        <p>Mobile screens use various "density-independent pixel" (DPI) ratios ranging from `mdpi` (1x) to `xxxhdpi` (4x). To ensure your icon doesn't look blurry on a high-end OLED display, we generate assets at every required scale using high-fidelity interpolation.</p>
+        
+        <h4>Privacy-First Native Exports</h4>
+        <p>By generating your mobile assets locally, you ensure that proprietary design work stays entirely internal. Our Mobile App Icon Generator handles the complexity of platform-specific naming conventions and folder structures, so you can focus on building your app.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-nav">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../privacy.html">Privacy Policy</a>
+            <a href="../terms.html">Terms of Service</a>
+            <a href="../contact.html">Contact Us</a>
+        </div>
+        <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+    </footer>
 
     <script>
         const dropZone = document.getElementById('dropZone');
@@ -171,7 +226,7 @@
 
         let sourceImage = null;
 
-        function sharpenCanvas(canvas, weight = 0.2) {
+        function sharpenCanvas(canvas, weight = 0.25) {
             const ctx = canvas.getContext('2d');
             const width = canvas.width;
             const height = canvas.height;

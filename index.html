@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Utility Suite - 13 Professional Tools in One Private Hub</title>
+    <title>Premium Utility Suite - 12 Professional Tools in One Private Hub</title>
     <meta name="description" content="A curated collection of professional tools including icon generators, UI design studios, privacy-first data scrubbers, and lifestyle calculators. 100% private, browser-based, and lightning fast.">
     
     <script type="application/ld+json">
@@ -12,12 +12,15 @@
       "@type": "WebApplication",
       "name": "Premium Utility Suite",
       "url": "https://yourdomain.com",
-      "description": "A curated collection of 13 professional web tools. 100% private, browser-based.",
+      "description": "A curated collection of 12 professional web tools. 100% private, browser-based.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "All",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
     }
     </script>
+
+    <!-- Google AdSense Placeholder (Auto-Ads) -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
     <style>
         :root {
@@ -35,7 +38,7 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem; }
         
         header { text-align: center; margin-bottom: 6rem; }
-        h1 { font-size: 4rem; font-weight: 900; margin-bottom: 1.5rem; color: #fff; letter-spacing: -0.04em; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 4rem; font-weight: 900; margin-bottom: 1.5rem; color: #fff; letter-spacing: -0.04em; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .subtitle { font-size: 1.25rem; color: var(--secondary); max-width: 700px; margin: 0 auto; }
 
         .section { margin-bottom: 6rem; }
@@ -81,6 +84,30 @@
             h1 { font-size: 2.5rem; }
             .container { padding: 4rem 1.5rem; }
         }
+
+
+        .site-footer {
+            margin-top: 8rem;
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .footer-nav a:hover { color: #fff; }
+        .copyright { color: #475569; font-size: 0.8rem; letter-spacing: 0.05em; }
     </style>
 </head>
 <body>
@@ -207,8 +234,14 @@
             </div>
         </section>
 
-        <footer>
-            &copy; 2026 PREMIUM UTILITY SUITE &bull; PURE BROWSER TECHNOLOGY
+        <footer class="site-footer">
+            <nav class="footer-nav">
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="contact.html">Contact Us</a>
+            </nav>
+            <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
         </footer>
     </div>
 </body>

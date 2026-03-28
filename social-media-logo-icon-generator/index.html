@@ -37,6 +37,8 @@
     <meta property="twitter:description" content="One-click, lossless crops for all major social platforms. 100% private.">
     
     <link rel="canonical" href="https://njnagaraj.github.io/icon-logo-generator-suite-nj/social-media-logo-icon-generator/" />
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root {
@@ -166,6 +168,39 @@
         .download-bar { display: none; } /* Hidden until image is processed */
 
         input[type="file"] { display: none; }
+
+        .deep-dive {
+            margin-top: 6rem;
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        .deep-dive h3 { color: #fff; margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #94a3b8; margin-bottom: 1rem; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: #fff; }
+        .copyright { color: #475569; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -184,6 +219,32 @@
         <div id="content"></div>
         <button id="downloadBtn" class="download-bar">Download All Assets (.ZIP)</button>
     </div>
+
+
+    <section class="deep-dive">
+        <h3>Mastering Social Media Asset Management</h3>
+        <p>In the digital age, your visual identity is often the first point of contact with your audience. Professional branding requires more than just high-resolution photos; it requires pixel-perfect alignment with platform-specific requirements.</p>
+        
+        <h4>Platform-Specific Ratios</h4>
+        <p>Instagram favors 1:1 squares and 4:5 portraits to maximize mobile screen real estate. Twitter (X) depends on wide 3:1 headers to create impact, while YouTube thumbnails require a strictly 16:9 ratio to avoid black bars on the video player.</p>
+        
+        <h4>Lossless Resizing & Sharpness</h4>
+        <p>Scaling a 4000px DSLR photo down to a 1080px upload can often lead to "interpolation blur." Our tool uses a proprietary multi-step downscaling algorithm followed by a 3x3 convolution sharpening filter. This ensures that every edge remains crisp and every color stays vibrant, even after compression.</p>
+        
+        <h4>Privacy First: The Browser-First Advantage</h4>
+        <p>Traditional image converters upload your personal photos to a remote server. Our Social Media Asset Suite processes every pixel locally in your browser's memory. Your photo never leaves your computer, ensuring 100% privacy for your creative assets.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-nav">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../privacy.html">Privacy Policy</a>
+            <a href="../terms.html">Terms of Service</a>
+            <a href="../contact.html">Contact Us</a>
+        </div>
+        <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+    </footer>
 
     <script>
         const dropZone = document.getElementById('dropZone');
@@ -282,15 +343,8 @@
             const adj = document.createElement('div');
             adj.className = 'adjustment-controls';
             
-            // Check if horizontal movement is possible
-            const targetAspect = crop.w / crop.h;
-            const sourceAspect = sourceImage.width / sourceImage.height;
-            
-            if (sourceAspect > targetAspect) {
-                // Horizontal adjustment possible
+            if (Math.abs(sourceAspect - targetAspect) > 0.01) {
                 adj.appendChild(createSlider(crop.id, 'x', 'Horizontal Pan'));
-            } else if (sourceAspect < targetAspect) {
-                // Vertical adjustment possible
                 adj.appendChild(createSlider(crop.id, 'y', 'Vertical Pan'));
             } else {
                 adj.innerHTML = `<p style="font-size:0.75rem; color:#64748b; text-align:center;">Perfect Fit</p>`;
@@ -327,7 +381,7 @@
             return div;
         }
 
-        function sharpenCanvas(canvas, weight = 0.15) {
+        function sharpenCanvas(canvas, weight = 0.25) {
             const ctx = canvas.getContext('2d');
             const width = canvas.width;
             const height = canvas.height;
@@ -378,18 +432,15 @@
             let sWidth, sHeight, sx, sy;
 
             if (sourceAspect > targetAspect) {
-                // Thicker/Wider source
                 sHeight = sourceHeight;
                 sWidth = sourceHeight * targetAspect;
-                sy = 0;
-                sx = (sourceWidth - sWidth) * state.x;
             } else {
-                // Taller source
                 sWidth = sourceWidth;
                 sHeight = sourceWidth / targetAspect;
-                sx = 0;
-                sy = (sourceHeight - sHeight) * state.y;
             }
+
+            sx = (sourceWidth - sWidth) * state.x;
+            sy = (sourceHeight - sHeight) * state.y;
 
             ctx.clearRect(0,0,targetWidth, targetHeight);
             

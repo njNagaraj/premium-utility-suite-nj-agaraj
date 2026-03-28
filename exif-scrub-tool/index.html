@@ -6,6 +6,8 @@
     <title>EXIF Scrubber - Privacy-First Image Cleaner</title>
     <meta name="description" content="Remove sensitive GPS, camera model, and timestamp metadata from your photos before sharing. 100% browser-based privacy.">
     <meta property="og:description" content="Remove GPS and camera metadata from your photos before posting online. 100% private.">
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     
     <script type="application/ld+json">
     {
@@ -70,6 +72,41 @@
             font-size: 0.8rem;
             margin-bottom: 2rem;
         }
+
+        .deep-dive {
+            margin-top: 6rem;
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: left;
+        }
+        .deep-dive h3 { color: #fff; margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #94a3b8; margin-bottom: 1rem; line-height: 1.6; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            width: 100%;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: #fff; }
+        .copyright { color: #475569; font-size: 0.8rem; }
         input[type="file"] { display: none; }
     </style>
 </head>
@@ -87,6 +124,32 @@
     </div>
 
     <div id="status" class="status">DONE! Metadata Stripped & Image Downloaded.</div>
+
+
+    <section class="deep-dive">
+        <h3>Mastering Digital Metadata Privacy</h3>
+        <p>Every photograph taken with a modern smartphone or digital camera contains hidden layers of information known as EXIF (Exchangeable Image File Format) data. While useful for professional photographers, this data can pose significant privacy risks when shared publicly.</p>
+        
+        <h4>What Information is Trapped in Your Photos?</h4>
+        <p>A standard JPG or HEIC file often encodes precise GPS coordinates (revealing where you live or work), the exact time and date of the capture, the device model, and even camera settings like ISO and aperture. If you share these photos on social media or forums, a malicious actor could extract this metadata to track your movements.</p>
+        
+        <h4>The Scrubbing Process</h4>
+        <p>Scrubbing metadata involves stripping the headers of the image file while preserving the actual pixel data. Our tool uses a high-performance Canvas rendering technique to redraw the image into a clean container, effectively creating a "sanitized" version of the file that contains zero metadata traces.</p>
+        
+        <h4>Why Browse-Side Scrubbing Matters</h4>
+        <p>Online metadata cleaners that require an upload are inherently contradictory; to protect your privacy, you are handing over your unscrubbed files to a third-party server. Our EXIF Scrub tool runs 100% locally. Your images never leave your machine, ensuring your privacy is never compromised during the sanitization process.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-nav">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../privacy.html">Privacy Policy</a>
+            <a href="../terms.html">Terms of Service</a>
+            <a href="../contact.html">Contact Us</a>
+        </div>
+        <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+    </footer>
 
     <script>
         const dropZone = document.getElementById('dropZone');

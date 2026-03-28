@@ -19,6 +19,8 @@
     }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     <style>
         :root {
             --bg: #ffffff;
@@ -137,6 +139,39 @@
         input[type="file"] { display: none; }
         .status { margin-top: 1rem; color: var(--accent); font-weight: 600; text-align: center; }
         h3 { margin-bottom: 0.5rem; color: var(--accent); }
+
+        .deep-dive {
+            margin-top: 6rem;
+            background: var(--secondary);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        .deep-dive h3 { color: var(--text); margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #94a3b8; margin-bottom: 1rem; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: var(--text); }
+        .copyright { color: #475569; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -151,32 +186,40 @@
     </div>
 
     <div id="controls" class="controls">
-        <h3>Previews</h3>
         <div id="previewGrid" class="preview-grid"></div>
 
-        <div class="guide-section">
-            <h3>1. Add to HTML &lt;head&gt;</h3>
-            <p>Paste this into your main HTML file:</p>
-            <pre><code>&lt;link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"&gt;
-&lt;link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"&gt;
-&lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;
-&lt;link rel="manifest" href="/site.webmanifest"&gt;</code></pre>
-            
-            <h3>2. Update Your Web Manifest</h3>
-            <p>Include this in your <code>site.webmanifest</code> (or <code>manifest.json</code>):</p>
-            <pre><code>{
-  "icons": [
-    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
-  ]
-}</code></pre>
-        </div>
-
-        <div style="margin-top: 2rem; margin-bottom: 5rem;">
+        <div style="margin-top: 4rem; margin-bottom: 5rem;">
             <button id="downloadBtn" class="download-bar">Download Web Assets ZIP</button>
             <div id="status" class="status"></div>
         </div>
     </div>
+
+
+
+    <section class="deep-dive">
+        <h3>Mastering Modern Web Branding</h3>
+        <p>In the modern web, a logo is more than just a `favicon.ico`. As Progressive Web Apps (PWAs) become the standard, your website needs to provide a rich set of brand assets for home screens, task switchers, and app stores.</p>
+        
+        <h4>Favicons vs. Touch Icons</h4>
+        <p>Traditional browsers display the 16x16 or 32x32 favicon in the tab. However, when a user booksmarks your site on an iPhone or iPad, iOS looks for the `apple-touch-icon.png` (usually 180x180). Providing high-resolution touch icons ensures your app looks native and premium when saved to a mobile home screen.</p>
+        
+        <h4>Web Manifests & Android Integration</h4>
+        <p>Android devices use the `site.webmanifest` to define how your site behaves when installed as an app. This tool generates the manifest and the required 192x192 and 512x512 icons, allowing your web application to have a professional presence in the Android app drawer.</p>
+        
+        <h4>Privacy-First Asset Generation</h4>
+        <p>We believe that developer tools should be transparent. Our Web App Logo Generator processes your branding assets entirely in your browser, using modern Canvas APIs to ensure maximum privacy and zero latency.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-nav">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../privacy.html">Privacy Policy</a>
+            <a href="../terms.html">Terms of Service</a>
+            <a href="../contact.html">Contact Us</a>
+        </div>
+        <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+    </footer>
 
     <script>
         const dropZone = document.getElementById('dropZone');
@@ -196,7 +239,7 @@
 
         let sourceImage = null;
 
-        function sharpenCanvas(canvas, weight = 0.2) {
+        function sharpenCanvas(canvas, weight = 0.25) {
             const ctx = canvas.getContext('2d');
             const width = canvas.width;
             const height = canvas.height;

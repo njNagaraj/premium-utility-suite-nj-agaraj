@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Debt Payoff Visualizer - Interactive Finance Tools</title>
     <meta property="og:description" content="Visualize your journey to financial freedom with interactive debt payoff charts.">
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     
     <script type="application/ld+json">
     {
@@ -68,6 +70,41 @@
             font-size: 0.8rem;
             margin-top: 2rem;
         }
+
+        .deep-dive {
+            margin-top: 6rem;
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: left;
+        }
+        .deep-dive h3 { color: #fff; margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #94a3b8; margin-bottom: 1rem; line-height: 1.6; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            width: 100%;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: #fff; }
+        .copyright { color: #475569; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -111,6 +148,32 @@
             <canvas id="debtChart"></canvas>
         </div>
     </div>
+
+
+    <section class="deep-dive">
+        <h3>The Psychology of Debt Repayment</h3>
+        <p>Managing debt is as much a psychological challenge as a financial one. Strategies like the "Debt Snowball" (paying off smallest balances first for momentum) or the "Debt Avalanche" (focusing on high-interest rates to save money) are proven methods to regain control of your financial future.</p>
+        
+        <h4>Understanding Compounding Interest</h4>
+        <p>Credit card debt and personal loans often utilize compounding interest, which can make balances feel insurmountable. Our visualizer calculates your daily periodic rate based on your APR to show exactly how much of your monthly payment is going toward interest versus principal. Seeing this ratio is often the "wake-up call" needed to accelerate repayment.</p>
+        
+        <h4>Visualizing the "Finish Line"</h4>
+        <p>Financial anxiety often stems from the unknown. By projecting your exactly payoff date based on your current trajectory, we transform a vague burden into a concrete project with an end date. Adjusting your monthly payment by even a small amount can drastically pull that end date forward, providing immediate positive reinforcement.</p>
+        
+        <h4>Privacy and Financial Security</h4>
+        <p>Your financial data is sensitive. Unlike many online calculators that require account linking or store your balances on their servers, our Debt Visualizer is 100% browser-based. Your numbers never leave your machine, ensuring complete privacy while you plan your path to financial freedom.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-nav">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../privacy.html">Privacy Policy</a>
+            <a href="../terms.html">Terms of Service</a>
+            <a href="../contact.html">Contact Us</a>
+        </div>
+        <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+    </footer>
 
     <script>
         let chart;

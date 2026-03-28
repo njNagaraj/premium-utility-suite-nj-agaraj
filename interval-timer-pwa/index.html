@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interval Timer - HIIT & Pomodoro Tool</title>
     <meta property="og:description" content="High-contrast HIIT and Productivity timer. Works offline, no ads.">
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     
     <script type="application/ld+json">
     {
@@ -33,10 +35,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            overflow-x: hidden;
+        }
+        .main-timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            height: 100vh;
-            padding: 2rem;
-            overflow: hidden;
+            flex-grow: 1;
+            margin-bottom: 4rem;
         }
         .timer-val {
             font-size: 15rem;
@@ -65,28 +74,91 @@
         input { background: none; border: 1px solid #333; color: #fff; padding: 0.5rem; border-radius: 8px; width: 80px; text-align: center; }
 
         .privacy-badge {
-            position: absolute;
-            bottom: 2rem;
+            margin-top: 2rem;
             color: #444;
             font-size: 0.75rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
+
+        .deep-dive {
+            margin-top: 6rem;
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: left;
+            max-width: 800px;
+        }
+        .deep-dive h3 { color: #fff; margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #94a3b8; margin-bottom: 1rem; line-height: 1.6; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            width: 100%;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: #fff; }
+        .copyright { color: #475569; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-    <div class="timer-val" id="display">25:00</div>
-    
-    <div class="controls">
-        <button class="btn-start" id="startBtn" onclick="toggle()">Start</button>
-        <button class="btn-reset" onclick="reset()">Reset</button>
+    <div class="main-timer">
+        <div class="timer-val" id="display">25:00</div>
+        
+        <div class="controls">
+            <button class="btn-start" id="startBtn" onclick="toggle()">Start</button>
+            <button class="btn-reset" onclick="reset()">Reset</button>
+        </div>
+
+        <div class="settings">
+            Set Duration: <input type="number" id="minutes" value="25" oninput="reset()"> minutes
+        </div>
+
+        <div class="privacy-badge">🛡️ Offline-Ready. No Data Collected.</div>
     </div>
 
-    <div class="settings">
-        Set Duration: <input type="number" id="minutes" value="25" oninput="reset()"> minutes
-    </div>
 
-    <div class="privacy-badge">🛡️ Offline-Ready. No Data Collected.</div>
+    <section class="deep-dive">
+        <h3>Mastering Time Management Techniques</h3>
+        <p>Whether you're performing high-intensity interval training (HIIT) or focusing on deep work with the Pomodoro Technique, time boxing is a scientifically proven method to increase performance and prevent burnout.</p>
+        
+        <h4>The Science of Focus Intervals</h4>
+        <p>Human attention span is biologically limited. Research indicates that the optimal "sprint" period for productivity is roughly 25-50 minutes, followed by a short recovery. Our high-precision timer ensures that you stick to these rhythms without distractions. By using a minimalist, high-contrast UI, we minimize the cognitive load needed to check your remaining time.</p>
+        
+        <h4>HIIT and Metabolic Efficiency</h4>
+        <p>In fitness, interval timing is the key to maximizing Excess Post-exercise Oxygen Consumption (EPOC). Precise work-to-rest ratios help maintain the correct heart rate zones for fat loss and cardiovascular health. Our timer provides a stable, zero-latency clock that works reliably even when your device loses network connection.</p>
+        
+        <h4>Designed for High-Pressure Environments</h4>
+        <p>When you're at the limit of physical or mental exhaustion, you need an interface that is clear and unambiguous. We use oversized typography and semantic colors to convey status at a glance. Because the tool is a Progressive Web App (PWA), it can be installed on your home screen for instant, offline access, ensuring your flow is never interrupted by loading screens.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-nav">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../privacy.html">Privacy Policy</a>
+            <a href="../terms.html">Terms of Service</a>
+            <a href="../contact.html">Contact Us</a>
+        </div>
+        <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+    </footer>
 
     <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 

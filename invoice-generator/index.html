@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional Invoice Generator - Privacy-First Document Creation</title>
     <meta property="og:description" content="Professional browser-based invoice generator. No server storage, 100% private.">
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     <meta name="description" content="Generate professional invoices instantly in your browser. Edit directly and print to PDF. 100% private, no data leaves your device.">
     
     <script type="application/ld+json">
@@ -86,8 +88,44 @@
         }
         [contenteditable]:hover { background: #f8fafc; outline: 1px dashed #cbd5e1; }
 
+        .deep-dive {
+            margin-top: 6rem;
+            background: #fff;
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+            max-width: 800px;
+        }
+        .deep-dive h3 { color: var(--sidebar-bg); margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #64748b; margin-bottom: 1rem; line-height: 1.6; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            width: 100%;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: var(--sidebar-bg); }
+        .copyright { color: #94a3b8; font-size: 0.8rem; }
+
         @media print {
-            .controls { display: none; }
+            .controls, .deep-dive, .site-footer { display: none !important; }
             .main { margin: 0; padding: 0; background: #fff; }
             .invoice-paper { box-shadow: none; width: 100%; }
             body { background: #fff; }
@@ -180,6 +218,35 @@
                 <p contenteditable="true" style="font-size: 0.9rem; color: #64748b;">Thank you for your business! Please pay within 15 days.</p>
             </div>
         </div>
+        
+        <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+
+            <section class="deep-dive">
+                <h3>The Professional Standard for Invoicing</h3>
+                <p>Invoicing is more than just a request for payment; it is a critical touchpoint in your client relationship. A professional, clear, and well-structured invoice reflects the quality of your work and helps ensure you get paid faster.</p>
+                
+                <h4>Key Elements of a Compliant Invoice</h4>
+                <p>To avoid tax complications and payment delays, ensure your invoices include: clear unique identifiers (Invoice #), accurate date of issue, full contact details for both parties, and a detailed breakdown of services. Our generator provides a lightweight framework that follows these global business standards.</p>
+                
+                <h4>Digital Privacy in Business</h4>
+                <p>Client information and project rates are highly confidential. Many online "free" invoice generators store your data to profile your business or sell leads. Our tool operates on a zero-trust architecture. All data entry happens in your browser's local state and is never transmitted to our servers. When you print to PDF, the document is generated entirely on your own device.</p>
+                
+                <h4>Optimization for Modern Workflows</h4>
+                <p>Efficiency is key for freelancers and small businesses. We recommend using our "Direct Edit" UI to make quick adjustments between projects. The high-contrast, professional typography ensures that your invoices are legible when printed or viewed on high-resolution screens across any platform.</p>
+            </section>
+
+            <footer class="site-footer">
+                <div class="footer-nav">
+                    <a href="../index.html">Home</a>
+                    <a href="../about.html">About</a>
+                    <a href="../privacy.html">Privacy Policy</a>
+                    <a href="../terms.html">Terms of Service</a>
+                    <a href="../contact.html">Contact Us</a>
+                </div>
+                <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+            </footer>
+        </div>
+
     </div>
 
     <script>

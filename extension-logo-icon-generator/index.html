@@ -19,6 +19,8 @@
     </script>
     <meta name="description" content="Generate all required icon sizes for your Chrome, Firefox, or Edge extension. Download a complete ZIP with manifest.json snippets in seconds.">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Google AdSense Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
     <style>
         :root {
             --bg: #ffffff;
@@ -116,6 +118,39 @@
         .download-bar:disabled { background: #475569; cursor: not-allowed; }
         input[type="file"] { display: none; }
         .status { margin-top: 1rem; color: var(--accent); font-weight: 500; text-align: center; }
+
+        .deep-dive {
+            margin-top: 6rem;
+            background: var(--secondary);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        .deep-dive h3 { color: var(--text); margin-bottom: 2rem; font-size: 1.8rem; }
+        .deep-dive h4 { color: var(--accent); margin: 1.5rem 0 0.5rem; }
+        .deep-dive p { color: #94a3b8; margin-bottom: 1rem; }
+        
+        .site-footer {
+            margin-top: 6rem;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .footer-nav a:hover { color: var(--text); }
+        .copyright { color: #475569; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -131,18 +166,44 @@
 
     <div id="controls" class="controls">
         <div id="previewGrid" class="preview-grid"></div>
-
-        <div style="margin-top: 2rem;">
-            <h3>Manifest Snippet</h3>
-            <p style="font-size: 0.9rem; opacity: 0.8;">Copy this into your <code>manifest.json</code>:</p>
-            <pre id="manifestCode" style="background: var(--secondary); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;"></pre>
+        
+        <div style="background: var(--secondary); padding: 2rem; border-radius: 12px; margin-top: 2rem; border: 1px solid var(--border);">
+            <h3 style="margin-bottom: 1rem; font-size: 1rem; color: var(--accent);">Manifest Snippet</h3>
+            <pre id="manifestCode" style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; font-size: 0.85rem; overflow-x: auto; color: #94a3b8;"></pre>
         </div>
 
-        <div style="margin-top: 2rem; margin-bottom: 5rem;">
+        <div style="margin-top: 4rem; margin-bottom: 5rem;">
             <button id="downloadBtn" class="download-bar">Download Icons ZIP</button>
             <div id="status" class="status"></div>
         </div>
     </div>
+
+
+
+    <section class="deep-dive">
+        <h3>Building Professional Extension Icons</h3>
+        <p>Creating icons for browser extensions (Chrome, Edge, Firefox) requires adhering to specific technical constraints to ensure your brand looks sharp in the browser toolbar and extension gallery.</p>
+        
+        <h4>Standard Size Requirements</h4>
+        <p>Browsers require multiple resolutions to handle different display environments. 16x16 is used for the toolbar, 32x32 for the extension management page, 48x48 for the display in the Chrome Web Store, and 128x128 for the store's primary asset. Providing these in clear, transparent PNG format is mandatory for submission.</p>
+        
+        <h4>Design Best Practices</h4>
+        <p>Because these icons are often viewed at very small sizes (like 16px), simplicity is key. Use high-contrast colors and avoid thin lines or complex text. Our tool helps maintain this clarity by using advanced downscaling filters that preserve edge sharpness.</p>
+        
+        <h4>Manifest Integration</h4>
+        <p>Once you download your icon pack, you must reference them in your <code>manifest.json</code>. This tool provides the exact snippet you need, ensuring your extension correctly utilizes the highest available resolution for the user's screen DPI.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-nav">
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../privacy.html">Privacy Policy</a>
+            <a href="../terms.html">Terms of Service</a>
+            <a href="../contact.html">Contact Us</a>
+        </div>
+        <div class="copyright">&copy; 2026 PREMIUM UTILITY SUITE &bull; PROFESSIONAL BROWSER TECHNOLOGY</div>
+    </footer>
 
     <script>
         const dropZone = document.getElementById('dropZone');
@@ -155,7 +216,7 @@
         const SIZES = [16, 32, 48, 64, 128, 512];
         let sourceImage = null;
 
-        function sharpenCanvas(canvas, weight = 0.2) {
+        function sharpenCanvas(canvas, weight = 0.25) {
             const ctx = canvas.getContext('2d');
             const width = canvas.width;
             const height = canvas.height;

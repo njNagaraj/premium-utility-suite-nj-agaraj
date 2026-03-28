@@ -13,4 +13,8 @@
     <url><loc>https://yourdomain.com/recipe-pro-converter/</loc><priority>0.8</priority></url>
     <url><loc>https://yourdomain.com/interval-timer-pwa/</loc><priority>0.8</priority></url>
     <url><loc>https://yourdomain.com/debt-payoff-visualizer/</loc><priority>0.8</priority></url>
+    <url><loc>https://yourdomain.com/about.html</loc><priority>0.5</priority></url>
+    <url><loc>https://yourdomain.com/privacy.html</loc><priority>0.5</priority></url>
+    <url><loc>https://yourdomain.com/terms.html</loc><priority>0.5</priority></url>
+    <url><loc>https://yourdomain.com/contact.html</loc><priority>0.5</priority></url>
 </urlset>
