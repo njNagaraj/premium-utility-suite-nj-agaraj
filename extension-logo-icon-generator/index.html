@@ -91,8 +91,31 @@
             font-size: 1rem;
         }
         button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .download-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            padding: 1rem 3rem;
+            border-radius: 99px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            z-index: 100;
+            transition: all 0.2s;
+            border: none;
+            color: white;
+            width: auto;
+            max-width: 90%;
+            display: none;
+            white-space: nowrap;
+        }
+        .download-bar:hover { transform: translateX(-50%) translateY(-4px); background: #1d4ed8; box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4); }
+        .download-bar:disabled { background: #475569; cursor: not-allowed; }
         input[type="file"] { display: none; }
-        .status { margin-top: 1rem; color: var(--accent); font-weight: 500; }
+        .status { margin-top: 1rem; color: var(--accent); font-weight: 500; text-align: center; }
     </style>
 </head>
 <body>
@@ -115,8 +138,8 @@
             <pre id="manifestCode" style="background: var(--secondary); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;"></pre>
         </div>
 
-        <div style="margin-top: 2rem;">
-            <button id="downloadBtn">Download Icons ZIP</button>
+        <div style="margin-top: 2rem; margin-bottom: 5rem;">
+            <button id="downloadBtn" class="download-bar">Download Icons ZIP</button>
             <div id="status" class="status"></div>
         </div>
     </div>
@@ -131,6 +154,40 @@
 
         const SIZES = [16, 32, 48, 64, 128, 512];
         let sourceImage = null;
+
+        function sharpenCanvas(canvas, weight = 0.2) {
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+            const output = ctx.createImageData(width, height);
+            const dst = output.data;
+
+            const kernel = [
+                0, -weight, 0,
+                -weight, 1 + 4 * weight, -weight,
+                0, -weight, 0
+            ];
+
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    const dstIdx = (y * width + x) * 4;
+                    for (let c = 0; c < 3; c++) {
+                        let sum = 0;
+                        for (let ky = 0; ky < 3; ky++) {
+                            for (let kx = 0; kx < 3; kx++) {
+                                const pixelIdx = ((y + ky - 1) * width + (x + kx - 1)) * 4 + c;
+                                sum += data[pixelIdx] * kernel[ky * 3 + kx];
+                            }
+                        }
+                        dst[dstIdx + c] = Math.min(Math.max(sum, 0), 255);
+                    }
+                    dst[dstIdx + 3] = data[dstIdx + 3];
+                }
+            }
+            ctx.putImageData(output, 0, 0);
+        }
 
         function stepDownScale(img, targetSize) {
             let currW = img.width;
@@ -163,6 +220,7 @@
             finalCtx.imageSmoothingEnabled = true;
             finalCtx.imageSmoothingQuality = 'high';
             finalCtx.drawImage(canvas, 0, 0, currW, currH, 0, 0, targetSize, targetSize);
+            sharpenCanvas(finalCanvas);
             return finalCanvas;
         }
 
@@ -189,6 +247,7 @@
                     generatePreviews();
                     updateManifestSnippet();
                     controls.style.display = 'block';
+                    downloadBtn.style.display = 'block';
                 };
                 img.src = e.target.result;
             };

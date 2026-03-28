@@ -161,8 +161,9 @@
             border: none;
             color: white;
         }
-        .download-bar:hover { transform: translateX(-50%) translateY(-4px); box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4); }
+        .download-bar:hover { transform: translateX(-50%) translateY(-4px); background: #4f46e5; box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4); }
         .download-bar:disabled { background: #475569; cursor: not-allowed; }
+        .download-bar { display: none; } /* Hidden until image is processed */
 
         input[type="file"] { display: none; }
     </style>
@@ -230,6 +231,7 @@
                     initCropState();
                     renderCategories();
                     controls.style.display = 'block';
+                    downloadBtn.style.display = 'block';
                     window.scrollTo({ top: dropZone.offsetTop + 100, behavior: 'smooth' });
                 };
                 img.src = e.target.result;
@@ -325,6 +327,40 @@
             return div;
         }
 
+        function sharpenCanvas(canvas, weight = 0.15) {
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+            const output = ctx.createImageData(width, height);
+            const dst = output.data;
+
+            const kernel = [
+                0, -weight, 0,
+                -weight, 1 + 4 * weight, -weight,
+                0, -weight, 0
+            ];
+
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    const dstIdx = (y * width + x) * 4;
+                    for (let c = 0; c < 3; c++) { // RGB
+                        let sum = 0;
+                        for (let ky = 0; ky < 3; ky++) {
+                            for (let kx = 0; kx < 3; kx++) {
+                                const pixelIdx = ((y + ky - 1) * width + (x + kx - 1)) * 4 + c;
+                                sum += data[pixelIdx] * kernel[ky * 3 + kx];
+                            }
+                        }
+                        dst[dstIdx + c] = Math.min(Math.max(sum, 0), 255);
+                    }
+                    dst[dstIdx + 3] = data[dstIdx + 3]; // Alpha
+                }
+            }
+            ctx.putImageData(output, 0, 0);
+        }
+
         function drawCrop(cropId, canvas) {
             const ctx = canvas.getContext('2d');
             ctx.imageSmoothingEnabled = true;
@@ -386,6 +422,9 @@
             } else {
                 ctx.drawImage(sourceImage, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
             }
+
+            // Apply sharpening for crystal clarity
+            sharpenCanvas(canvas);
         }
 
         downloadBtn.onclick = async () => {
