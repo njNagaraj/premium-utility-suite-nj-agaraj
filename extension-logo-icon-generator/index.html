@@ -125,6 +125,36 @@
         input[type="file"] { display: none; }
         .status { margin-top: 1rem; color: var(--accent); font-weight: 500; text-align: center; }
 
+        /* Zoom & Pan Controls */
+        .adjustment-controls {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            margin-top: 2rem;
+        }
+        .control-group { margin-bottom: 1.25rem; }
+        .control-group:last-child { margin-bottom: 0; }
+        .control-group label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            appearance: none;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
         .deep-dive {
             margin-top: 6rem;
             background: var(--secondary);
@@ -171,6 +201,20 @@
     </div>
 
     <div id="controls" class="controls">
+        <div class="adjustment-controls">
+            <div class="control-group">
+                <label>Zoom</label>
+                <input type="range" id="zoom-slider" min="1" max="3" step="0.05" value="1">
+            </div>
+            <div class="control-group">
+                <label>Horizontal Pan</label>
+                <input type="range" id="x-slider" min="0" max="1" step="0.01" value="0.5">
+            </div>
+            <div class="control-group">
+                <label>Vertical Pan</label>
+                <input type="range" id="y-slider" min="0" max="1" step="0.01" value="0.5">
+            </div>
+        </div>
         <div id="previewGrid" class="preview-grid"></div>
         
         <div style="background: var(--secondary); padding: 2rem; border-radius: 12px; margin-top: 2rem; border: 1px solid var(--border);">
@@ -221,6 +265,7 @@
 
         const SIZES = [16, 32, 48, 64, 128, 512];
         let sourceImage = null;
+        let cropState = { x: 0.5, y: 0.5, zoom: 1 };
 
         function sharpenCanvas(canvas, weight = 0.25) {
             const ctx = canvas.getContext('2d');
@@ -257,38 +302,41 @@
         }
 
         function stepDownScale(img, targetSize) {
-            let currW = img.width;
-            let currH = img.height;
-            let canvas = document.createElement('canvas');
-            let ctx = canvas.getContext('2d');
-            canvas.width = currW;
-            canvas.height = currH;
-            ctx.drawImage(img, 0, 0);
+            const sourceWidth = img.width;
+            const sourceHeight = img.height;
+            const targetAspect = 1; // Icons are always square
+            const sourceAspect = sourceWidth / sourceHeight;
 
-            while (currW > targetSize * 2) {
-                let nextW = Math.floor(currW / 2);
-                let nextH = Math.floor(currH / 2);
-                let nextCanvas = document.createElement('canvas');
-                let nextCtx = nextCanvas.getContext('2d');
-                nextCanvas.width = nextW;
-                nextCanvas.height = nextH;
-                nextCtx.imageSmoothingEnabled = true;
-                nextCtx.imageSmoothingQuality = 'high';
-                nextCtx.drawImage(canvas, 0, 0, currW, currH, 0, 0, nextW, nextH);
-                canvas = nextCanvas;
-                currW = nextW;
-                currH = nextH;
+            // 1. Calculate base "cover" dimensions
+            let baseSWidth, baseSHeight;
+            if (sourceAspect > targetAspect) {
+                baseSHeight = sourceHeight;
+                baseSWidth = sourceHeight * targetAspect;
+            } else {
+                baseSWidth = sourceWidth;
+                baseSHeight = sourceWidth / targetAspect;
             }
 
-            let finalCanvas = document.createElement('canvas');
-            let finalCtx = finalCanvas.getContext('2d');
-            finalCanvas.width = targetSize;
-            finalCanvas.height = targetSize;
-            finalCtx.imageSmoothingEnabled = true;
-            finalCtx.imageSmoothingQuality = 'high';
-            finalCtx.drawImage(canvas, 0, 0, currW, currH, 0, 0, targetSize, targetSize);
-            sharpenCanvas(finalCanvas);
-            return finalCanvas;
+            // 2. Apply zoom
+            let sWidth = baseSWidth / cropState.zoom;
+            let sHeight = baseSHeight / cropState.zoom;
+
+            // 3. Calculate pan
+            let sx = (sourceWidth - sWidth) * cropState.x;
+            let sy = (sourceHeight - sHeight) * cropState.y;
+
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext('2d');
+            canvas.width = targetSize;
+            canvas.height = targetSize;
+            
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            
+            ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetSize, targetSize);
+            
+            sharpenCanvas(canvas);
+            return canvas;
         }
 
         dropZone.onclick = () => fileInput.click();
@@ -311,6 +359,10 @@
                 const img = new Image();
                 img.onload = () => {
                     sourceImage = img;
+                    cropState = { x: 0.5, y: 0.5, zoom: 1 };
+                    document.getElementById('zoom-slider').value = 1;
+                    document.getElementById('x-slider').value = 0.5;
+                    document.getElementById('y-slider').value = 0.5;
                     generatePreviews();
                     updateManifestSnippet();
                     controls.style.display = 'block';
@@ -320,6 +372,14 @@
             };
             reader.readAsDataURL(file);
         }
+
+        ['zoom-slider', 'x-slider', 'y-slider'].forEach(id => {
+            const axis = id.split('-')[0];
+            document.getElementById(id).oninput = (e) => {
+                cropState[axis === 'zoom' ? 'zoom' : axis] = parseFloat(e.target.value);
+                generatePreviews();
+            };
+        });
 
         function updateManifestSnippet() {
             const manifest = {

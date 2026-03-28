@@ -311,7 +311,7 @@
             cropState = {};
             CONFIG.forEach(cat => {
                 cat.crops.forEach(crop => {
-                    cropState[crop.id] = { x: 0.5, y: 0.5 };
+                    cropState[crop.id] = { x: 0.5, y: 0.5, zoom: 1 };
                 });
             });
         }
@@ -353,12 +353,9 @@
             const sourceAspect = sourceImage.width / sourceImage.height;
             const targetAspect = crop.w / crop.h;
 
-            if (Math.abs(sourceAspect - targetAspect) > 0.01) {
-                adj.appendChild(createSlider(crop.id, 'x', 'Horizontal Pan'));
-                adj.appendChild(createSlider(crop.id, 'y', 'Vertical Pan'));
-            } else {
-                adj.innerHTML = `<p style="font-size:0.75rem; color:#64748b; text-align:center;">Perfect Fit</p>`;
-            }
+            adj.appendChild(createSlider(crop.id, 'zoom', 'Zoom', 1, 3, 0.05));
+            adj.appendChild(createSlider(crop.id, 'x', 'Horizontal Pan'));
+            adj.appendChild(createSlider(crop.id, 'y', 'Vertical Pan'));
             
             card.appendChild(canvas);
             card.appendChild(info);
@@ -370,16 +367,16 @@
             return card;
         }
 
-        function createSlider(cropId, axis, label) {
+        function createSlider(cropId, axis, label, min = 0, max = 1, step = 0.01) {
             const div = document.createElement('div');
             div.className = 'control-group';
             div.innerHTML = `<label>${label}</label>`;
             
             const slider = document.createElement('input');
             slider.type = 'range';
-            slider.min = 0;
-            slider.max = 1;
-            slider.step = 0.01;
+            slider.min = min;
+            slider.max = max;
+            slider.step = step;
             slider.value = cropState[cropId][axis];
             
             slider.oninput = (e) => {
@@ -439,16 +436,21 @@
             const targetAspect = targetWidth / targetHeight;
             const sourceAspect = sourceWidth / sourceHeight;
 
-            let sWidth, sHeight, sx, sy;
-
+            // 1. Calculate base "cover" dimensions
+            let baseSWidth, baseSHeight;
             if (sourceAspect > targetAspect) {
-                sHeight = sourceHeight;
-                sWidth = sourceHeight * targetAspect;
+                baseSHeight = sourceHeight;
+                baseSWidth = sourceHeight * targetAspect;
             } else {
-                sWidth = sourceWidth;
-                sHeight = sourceWidth / targetAspect;
+                baseSWidth = sourceWidth;
+                baseSHeight = sourceWidth / targetAspect;
             }
 
+            // 2. Apply zoom (zoom reduces the source area)
+            sWidth = baseSWidth / state.zoom;
+            sHeight = baseSHeight / state.zoom;
+
+            // 3. Calculate pan bounds
             sx = (sourceWidth - sWidth) * state.x;
             sy = (sourceHeight - sHeight) * state.y;
 
