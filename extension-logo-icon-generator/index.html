@@ -206,14 +206,7 @@
                 <label>Zoom</label>
                 <input type="range" id="zoom-slider" min="1" max="3" step="0.05" value="1">
             </div>
-            <div class="control-group">
-                <label>Horizontal Pan</label>
-                <input type="range" id="x-slider" min="0" max="1" step="0.01" value="0.5">
-            </div>
-            <div class="control-group">
-                <label>Vertical Pan</label>
-                <input type="range" id="y-slider" min="0" max="1" step="0.01" value="0.5">
-            </div>
+
         </div>
         <div id="previewGrid" class="preview-grid"></div>
         
@@ -361,8 +354,7 @@
                     sourceImage = img;
                     cropState = { x: 0.5, y: 0.5, zoom: 1 };
                     document.getElementById('zoom-slider').value = 1;
-                    document.getElementById('x-slider').value = 0.5;
-                    document.getElementById('y-slider').value = 0.5;
+
                     generatePreviews();
                     updateManifestSnippet();
                     controls.style.display = 'block';
@@ -373,13 +365,10 @@
             reader.readAsDataURL(file);
         }
 
-        ['zoom-slider', 'x-slider', 'y-slider'].forEach(id => {
-            const axis = id.split('-')[0];
-            document.getElementById(id).oninput = (e) => {
-                cropState[axis === 'zoom' ? 'zoom' : axis] = parseFloat(e.target.value);
-                generatePreviews();
-            };
-        });
+        document.getElementById('zoom-slider').oninput = (e) => {
+            cropState.zoom = parseFloat(e.target.value);
+            generatePreviews();
+        };
 
         function updateManifestSnippet() {
             const manifest = {
